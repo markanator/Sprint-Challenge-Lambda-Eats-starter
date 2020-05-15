@@ -1,38 +1,49 @@
 .App {
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.Navbar {
+    width: 80%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.Homepage {
+    width: 100%;
+    position: relative;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.Hero {
+    width: auto;
+    height: 400px;
+    background-image: url('https://www.wallpaperflare.com/static/617/539/798/food-pizza-pepperoni-set-wallpaper.jpg');
+    position: fixed;
+    min-width: 100%;
+    min-height: auto;
+    background-size: cover;
+    background-position: center;
 }
 
-.App-link {
-  color: #61dafb;
+.Hero h1 {
+    padding-top: 100px;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 3px black;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.order-hero-img {
+    width: 460px;
+    height: auto;
+}
+.error {
+    font-size: 13px;
+    color: red;
+}
+
+.underHero {
+    margin-top: 400px;
+    width: auto;
+    color: red;
 }
