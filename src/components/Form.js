@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 
 import '../App.css'
+import * as yup from 'yup';
+import axios from 'axios';
 
 import {
     CustomInput,
@@ -10,8 +12,26 @@ import {
     Label,
     Input,
     FormText,
-    Button
+    Button,
+    Alert,
+    FormFeedback
 } from 'reactstrap';
+
+const formSchema = yup
+    .object()
+    .shape({
+        pName: yup
+            .string()
+            .min(2)
+            .required(),
+        size: yup.string(),
+        pepperoni: yup.bool(),
+        sausage: yup.bool(),
+        canadianBacon: yup.bool(),
+        spicyItalianBacon: yup.bool(),
+        grilledChicken: yup.bool(),
+        specialIns: yup.string()
+    });
 
 function Form() {
     const [formData,
@@ -26,9 +46,22 @@ function Form() {
         specialIns: ''
     });
 
+    const [errorsState,
+        setErrorsState] = useState({
+        pName: '',
+        size: '',
+        pepperoni: '',
+        sausage: '',
+        canadianBacon: '',
+        spicyItalianBacon: '',
+        grilledChicken: '',
+        specialIns: ''
+    });
+
     const inputChange = e => {
         e.persist();
         console.log("input changed!");
+        validate(e);
         // Lets us solve checked vs data
         let value = e.target.type === "checkbox"
             ? e.target.checked
@@ -42,16 +75,73 @@ function Form() {
 
     const InputToppings = e => {
         e.persist();
+        validate(e);
         console.log("topping changed!");
+        let value = e.target.type === "checkbox"
+            ? e.target.checked
+            : e.target.value;
+
         setFormData({
             ...formData,
-            [e.target.name]: e.target.checked
+            [e.target.name]: value
         });
+    };
+
+    const validate = e => {
+        e.persist();
+        if (e.target.type !== "checkbox") {
+            yup
+                .reach(formSchema, e.target.name)
+                .validate(e.target.value)
+                .then(valid => {
+                    //if valid we clear our error
+                    console.log(valid);
+                    setErrorsState({
+                        ...errorsState,
+                        [e.target.name]: ""
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    setErrorsState({
+                        ...errorsState,
+                        [e.target.name]: err.errors[0]
+                    });
+                });
+        } else {
+            yup
+                .reach(formSchema, e.target.name)
+                .validate(e.target.checked)
+                .then(valid => {
+                    //if valid we clear our error
+                    console.log(valid);
+                    setErrorsState({
+                        ...errorsState,
+                        [e.target.name]: ""
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    setErrorsState({
+                        ...errorsState,
+                        [e.target.name]: err.errors[0]
+                    });
+                });
+        }
+
     };
 
     const formSubmit = e => {
         e.preventDefault();
+        // validate(e);
         console.log("form submitted!");
+        axios
+            .post("https://reqres.in/api/users", formData)
+            .then(resp => {
+                console.log(resp);
+                console.table(resp.data);
+            })
+            .catch(err => console.log(err));
     };
 
     return (
@@ -66,15 +156,21 @@ function Form() {
             <form onSubmit={formSubmit} className='myForm'>
                 {/* NAME INPUT */}
                 <FormGroup>
-                    <Label htmlFor="pName">Name your Custom Pizza!</Label>
-                    <FormText>Required.</FormText>
-                    <Input
-                        type="text"
-                        name="pName"
-                        id="pName"
-                        placeholder="Friday Sauce Boss!"
-                        value={formData.pName}
-                        onChange={inputChange}/> {/* {errorsState.pName.length >= 0? (<p className="error">{errorsState.pName}</p>): null} */}
+                    <FormGroup>
+
+                        <Label htmlFor="pName">Name your Custom Pizza!
+                            <FormText>Required.</FormText>
+                            <Input
+                                type="text"
+                                name="pName"
+                                id="pName"
+                                placeholder="Friday Sauce Boss!"
+                                value={formData.pName}
+                                onChange={inputChange}/>
+                            {errorsState.pName.length > 0 ? (<p className="error">{errorsState.pName}</p>): null}
+                            
+                        </Label>
+                    </FormGroup>
 
                     {/* Size Group */}
                     <FormGroup>
@@ -169,12 +265,13 @@ function Form() {
                                 placeholder="Anything else you'd like to add?"
                                 value={formData.specialIns}
                                 onChange={inputChange}/>
+                                {errorsState.specialIns.length >= 0? (<p className="error">{errorsState.specialIns}</p>): null}
                         </label>
                     </FormGroup>
 
                     <Button
                         color="primary"
-                        disabled={formData.specialIns.length === 0
+                        disabled={formData.pName.length >2
                         ? true
                         : false}>
                         Place Order!
