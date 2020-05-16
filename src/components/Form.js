@@ -131,7 +131,7 @@ function Form() {
 
     const formSubmit = e => {
         e.preventDefault();
-        // validate(e);
+        validate(e);
         console.log("form submitted!");
         const fetch = async() => {
             axios

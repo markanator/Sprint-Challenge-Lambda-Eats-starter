@@ -11,10 +11,10 @@ function NavBar() {
                     <NavbarBrand>Lambda Eats</NavbarBrand>
                     <Row>
                         <NavItem>
-                            <Link to='/' data-cy="homeBtn">Home</Link>
+                            <Link to='/' className='nav-link active' data-cy="homeBtn">Home</Link>
                         </NavItem>
                         <NavItem>
-                            <Link to='/pizza' data-cy="MainOrderBtn" >Order</Link>
+                            <Link to='/pizza' className='nav-link active' data-cy="MainOrderBtn" >Order</Link>
                         </NavItem>
                     </Row>
 
