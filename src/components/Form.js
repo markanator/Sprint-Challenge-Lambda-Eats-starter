@@ -12,9 +12,7 @@ import {
     Label,
     Input,
     FormText,
-    Button,
-    Alert,
-    FormFeedback
+    Button
 } from 'reactstrap';
 
 const formSchema = yup
@@ -135,13 +133,17 @@ function Form() {
         e.preventDefault();
         // validate(e);
         console.log("form submitted!");
-        axios
-            .post("https://reqres.in/api/users", formData)
-            .then(resp => {
-                console.log(resp);
-                console.table(resp.data);
-            })
-            .catch(err => console.log(err));
+        const fetch = async() => {
+            axios
+                .post("https://reqres.in/api/users", formData)
+                .then(resp => {
+                    console.log(resp);
+                    console.table(resp.data);
+                })
+                .catch(err => console.log(err));
+        }
+
+        fetch();
     };
 
     return (
@@ -162,13 +164,17 @@ function Form() {
                             <FormText>Required.</FormText>
                             <Input
                                 type="text"
+                                data-cy='pName'
                                 name="pName"
                                 id="pName"
                                 placeholder="Friday Sauce Boss!"
                                 value={formData.pName}
-                                onChange={inputChange}/>
-                            {errorsState.pName.length > 0 ? (<p className="error">{errorsState.pName}</p>): null}
-                            
+                                onChange={inputChange}/> {errorsState.pName.length > 0
+                                ? (
+                                    <p className="error">{errorsState.pName}</p>
+                                )
+                                : null}
+
                         </Label>
                     </FormGroup>
 
@@ -180,6 +186,7 @@ function Form() {
                         <CustomInput
                             type="select"
                             name="size"
+                            data-cy='size'
                             id="size"
                             value={formData.size}
                             onChange={inputChange}>
@@ -202,6 +209,7 @@ function Form() {
                                         <Input
                                             type='checkbox'
                                             name="pepperoni"
+                                            data-cy='pepperoni'
                                             id="pepperoni"
                                             checked={formData.pepperoni}
                                             onChange={InputToppings}/>
@@ -213,6 +221,7 @@ function Form() {
                                         <Input
                                             type="checkbox"
                                             id="sausage"
+                                            data-cy='sausage'
                                             name="sausage"
                                             checked={formData.sausage}
                                             onChange={InputToppings}/>
@@ -223,6 +232,7 @@ function Form() {
                                     <Label check>
                                         <Input
                                             type="checkbox"
+                                            data-cy='canadianBacon'
                                             id="canadianBacon"
                                             name="canadianBacon"
                                             checked={formData.canadianBacon}
@@ -234,6 +244,7 @@ function Form() {
                                     <Label check>
                                         <Input
                                             type="checkbox"
+                                            data-cy='spicyItalianBacon'
                                             id="spicyItalianBacon"
                                             name="spicyItalianBacon"
                                             checked={formData.spicyItalianBacon}
@@ -245,6 +256,7 @@ function Form() {
                                     <Label check>
                                         <Input
                                             type="checkbox"
+                                            data-cy='grilledChicken'
                                             id="grilledChicken"
                                             name="grilledChicken"
                                             checked={formData.grilledChicken}
@@ -259,19 +271,24 @@ function Form() {
                         <legend>Special Instructions</legend>
                         <label>
                             <Input
+                                data-cy='specialIns'
                                 type="textarea"
                                 name="specialIns"
                                 id="specialIns"
                                 placeholder="Anything else you'd like to add?"
                                 value={formData.specialIns}
-                                onChange={inputChange}/>
-                                {errorsState.specialIns.length >= 0? (<p className="error">{errorsState.specialIns}</p>): null}
+                                onChange={inputChange}/> {errorsState.specialIns.length >= 0
+                                ? (
+                                    <p className="error">{errorsState.specialIns}</p>
+                                )
+                                : null}
                         </label>
                     </FormGroup>
 
                     <Button
+                        data-cy='submitBtn'
                         color="primary"
-                        disabled={formData.pName.length >2
+                        disabled={formData.pName.length === 0
                         ? true
                         : false}>
                         Place Order!

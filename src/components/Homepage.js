@@ -11,7 +11,7 @@ function Homepage(props) {
           Your favorite food, delivered while coding!
         </h1>
         <br />
-        <Button color="primary" size="lg">
+        <Button data-cy="orderBtn" color="primary" size="lg">
           Order Now!
         </Button>
       </div>
